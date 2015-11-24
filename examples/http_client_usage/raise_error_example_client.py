@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+
+from __future__ import unicode_literals
+from __future__ import print_function
+import pyjsonrpc
+
+
 # BEGIN --- required only for testing, remove in real world code --- BEGIN
 import os
 import sys
@@ -10,13 +16,12 @@ sys.path.insert(0, APPDIR)
 # END --- required only for testing, remove in real world code --- END
 
 
-import pyjsonrpc
+rpc_client = pyjsonrpc.HttpClient("http://localhost:8080", gzipped=True)
 
-rpc_client = pyjsonrpc.HttpClient("http://localhost:8080", gzipped = True)
 
 try:
-    print repr(rpc_client.call("add", 1, 2))
-except pyjsonrpc.JsonRpcError, err:
-    print err.code
-    print err.message
-    print err.data
+    print(repr(rpc_client.call("add", 1, 2)))
+except pyjsonrpc.JsonRpcError as err:
+    print(err.code)
+    print(err.message)
+    print(err.data)

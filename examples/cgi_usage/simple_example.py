@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+
+from __future__ import unicode_literals
+from __future__ import print_function
+import pyjsonrpc
+
+
 # BEGIN --- required only for testing, remove in real world code --- BEGIN
 import os
 import sys
@@ -10,16 +16,13 @@ sys.path.insert(0, APPDIR)
 # END --- required only for testing, remove in real world code --- END
 
 
-import pyjsonrpc
-
-
 def add(a, b):
     """Test function"""
     return a + b
 
 
 # Handles the JSON-RPC request and gets back the result to STDOUT
-pyjsonrpc.handle_cgi_request(methods = dict(add = add))
+pyjsonrpc.handle_cgi_request(methods=dict(add=add))
 
 
 # URL to test this script:

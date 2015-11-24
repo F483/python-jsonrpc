@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+
+from __future__ import unicode_literals
+from __future__ import print_function
+import pyjsonrpc
+import ssl
+
+
 # BEGIN --- required only for testing, remove in real world code --- BEGIN
 import os
 import sys
@@ -10,9 +17,6 @@ sys.path.insert(0, APPDIR)
 # END --- required only for testing, remove in real world code --- END
 
 
-import pyjsonrpc
-import ssl
-
 # NOTE/XXX/LOOKATME: This disables SSL cert checking.
 # You should only be using this if you know what you are doing.
 # Seriously.
@@ -21,8 +25,7 @@ context.check_hostname = False
 context.verify_mode = ssl.CERT_NONE
 
 rpc_client = pyjsonrpc.HttpClient(
-    "https://localhost:8080", gzipped = True, ssl_context = context
+    "https://localhost:8080", gzipped=True, ssl_context=context
 )
 
-print rpc_client.call("add", 1, 2)
-
+print(rpc_client.call("add", 1, 2))

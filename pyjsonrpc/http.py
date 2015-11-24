@@ -8,6 +8,9 @@ from __future__ import print_function
 from future.backports.http import server
 from future.backports.http import client
 from future.backports.http import cookies as http_cookies
+from future.moves.urllib.parse import urlparse, parse_qs
+from future.moves.urllib.request import urlopen, Request
+from past.builtins import basestring
 
 import os
 import sys
@@ -17,8 +20,6 @@ import socketserver
 import gzip
 import tempfile
 import logging
-from future.moves.urllib.parse import urlparse, parse_qs
-from future.moves.urllib.request import urlopen, Request
 from . import rpcrequest
 from . import rpcresponse
 from . import rpcerror
@@ -98,9 +99,11 @@ def http_request(
         request.add_header("Content-Encoding", "gzip")
         request.add_header("Accept-Encoding", "gzip")
         spooled_file.seek(0)
-        request.add_data(spooled_file)
+        request.data = spooled_file
     else:
-        request.add_data(json_string)
+        request.data = json_string
+
+    request.add_header("Content-Length", len(request.data))
 
     # Content Type
     request.add_header("Content-Type", content_type or "application/json")
@@ -132,7 +135,7 @@ def http_request(
             else:
                 raise
     else:
-        response = urlopen(request, timeout = timeout)
+        response = urlopen(request, timeout=timeout)
 
     # Analyze response and return result
     try:
@@ -481,6 +484,8 @@ class HttpRequestHandler(server.BaseHTTPRequestHandler, rpclib.JsonRpc):
             request_json = self.rfile.read(content_length)
 
         # Call
+        if isinstance(request_json, bytes):
+            request_json = request_json.decode('utf-8')
         response_json = self.call(request_json) or ""
 
         # Return result
@@ -492,6 +497,8 @@ class HttpRequestHandler(server.BaseHTTPRequestHandler, rpclib.JsonRpc):
             # Gzipped
             content = tools.SpooledFile()
             with gzip.GzipFile(filename = "", mode = "wb", fileobj = content) as gz:
+                if not isinstance(response_json, bytes):
+                    response_json = response_json.encode('utf-8')
                 gz.write(response_json)
             content.seek(0)
 

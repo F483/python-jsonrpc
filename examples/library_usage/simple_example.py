@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+
+from __future__ import unicode_literals
+from __future__ import print_function
+import pyjsonrpc
+
+
 # BEGIN --- required only for testing, remove in real world code --- BEGIN
 import os
 import sys
@@ -8,9 +14,6 @@ THISDIR = os.path.dirname(os.path.abspath(__file__))
 APPDIR = os.path.abspath(os.path.join(THISDIR, os.path.pardir, os.path.pardir))
 sys.path.insert(0, APPDIR)
 # END --- required only for testing, remove in real world code --- END
-
-
-import pyjsonrpc
 
 
 def add(a, b):
@@ -34,7 +37,7 @@ response = pyjsonrpc.parse_response_json(response_json)
 
 # 5. Print result or error
 if response.error:
-    print "Error:", response.error.code, response.error.message
+    print("Error:", response.error.code, response.error.message)
 else:
-    print "Result:", response.result
+    print("Result:", response.result)
 
