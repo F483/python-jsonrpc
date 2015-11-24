@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+
+from __future__ import unicode_literals
 import json as _json
+
+
 JsonParseError = ValueError
 
 
@@ -13,13 +17,11 @@ dumps_allow_nan = True
 dumps_cls = None
 dumps_indent = None
 dumps_separators = None
-dumps_encoding = "utf-8"
 dumps_default = None
 dumps_sort_keys = False
 
 
 # Default-Parameters for the *loads*-function
-loads_encoding = None
 loads_cls = None
 loads_object_hook = None
 loads_parse_float = None
@@ -37,16 +39,15 @@ def dumps(obj):
 
     return _json.dumps(
         obj,
-        skipkeys = dumps_skipkeys,
-        ensure_ascii = dumps_ensure_ascii,
-        check_circular = dumps_check_circular,
-        allow_nan = dumps_allow_nan,
-        cls = dumps_cls,
-        indent = dumps_indent,
-        separators = dumps_separators,
-        encoding = dumps_encoding,
-        default = dumps_default,
-        sort_keys = dumps_sort_keys
+        skipkeys=dumps_skipkeys,
+        ensure_ascii=dumps_ensure_ascii,
+        check_circular=dumps_check_circular,
+        allow_nan=dumps_allow_nan,
+        cls=dumps_cls,
+        indent=dumps_indent,
+        separators=dumps_separators,
+        default=dumps_default,
+        sort_keys=dumps_sort_keys
     )
 
 
@@ -59,7 +60,6 @@ def loads(s):
 
     # Named parameters for *loads*
     kwargs = {
-        "encoding": loads_encoding,
         "cls": loads_cls,
         "object_hook": loads_object_hook,
         "parse_float": loads_parse_float,

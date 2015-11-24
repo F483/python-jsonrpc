@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+
+from __future__ import unicode_literals
 import os
 import gzip
-import StringIO
 import tempfile
+from io import StringIO
 
 
 # Workaround for Google App Engine
@@ -78,7 +80,7 @@ def safe_unicode(value):
             return unicode(value, "utf-8")
         except UnicodeDecodeError:
             return unicode(value, "iso-8859-15", "ignore")
-        except StandardError, err:
+        except StandardError as err:
             return unicode(repr(value))
-    except StandardError, err:
+    except StandardError as err:
         return unicode(repr(value))

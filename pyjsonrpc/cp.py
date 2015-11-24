@@ -7,16 +7,17 @@ http://www.cherrypy.org/
 http://cherrypy.readthedocs.org/
 """
 
+
+from __future__ import unicode_literals
 import os
 import httplib
-import rpclib
-import rpcrequest
 import cherrypy
-import rpcjson
-import rpcerror
-import tools
+from . import rpclib
+from . import rpcrequest
+from . import rpcjson
+from . import tools
 
-# ToDo: Replace compress and decompress with faster methods
+# TODO: Replace compress and decompress with faster methods
 from cherrypy.lib.encoding import compress
 
 

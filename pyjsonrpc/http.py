@@ -1,26 +1,28 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+
+from __future__ import unicode_literals
+from __future__ import print_function
 import os
 import sys
-import urllib2
-import StringIO
+from io import StringIO
 import base64
-import BaseHTTPServer
-import SocketServer
-import httplib
-import urllib
-import urlparse
+import http.server
+import http.client
+import http.cookies
+import socketserver
 import gzip
 import tempfile
-import Cookie
 import logging
-import rpcrequest
-import rpcresponse
-import rpcerror
-import rpclib
-import rpcjson
-import tools
+from future.moves.urllib.parse import urlparse, parse_qs
+from future.moves.urllib.request import urlopen, Request
+from . import rpcrequest
+from . import rpcresponse
+from . import rpcerror
+from . import rpclib
+from . import rpcjson
+from . import tools
 
 
 # Workaround for Google App Engine
@@ -84,7 +86,7 @@ def http_request(
         logging.debug(u"Client-->Server: {json_string}".format(json_string = repr(json_string)))
 
     # Create request and add data
-    request = urllib2.Request(url)
+    request = Request(url)
 
     if gzipped:
         # Compress content (SpooledTemporaryFile to reduce memory usage)
@@ -108,7 +110,7 @@ def http_request(
 
     # Cookies
     if cookies:
-        cookie = Cookie.SimpleCookie(cookies)
+        cookie = http.cookies.SimpleCookie(cookies)
         request.add_header("Cookie", cookie.output(header = "", sep = ";"))
 
     # Additional headers (overrides other headers)
@@ -119,16 +121,16 @@ def http_request(
     # Send request to server
     if ssl_context:
         try:
-            response = urllib2.urlopen(
+            response = urlopen(
                 request, timeout = timeout, context = ssl_context
             )
-        except TypeError, err:
+        except TypeError as err:
             if u"context" in unicode(err):
                 raise NotImplementedError(u"SSL-Context needs Python >= 2.7.9")
             else:
                 raise
     else:
-        response = urllib2.urlopen(request, timeout = timeout)
+        response = urlopen(request, timeout = timeout)
 
     # Analyze response and return result
     try:
@@ -325,14 +327,14 @@ class HttpClient(object):
         return self._Method(http_client_instance = self, method = method)
 
 
-class ThreadingHttpServer(SocketServer.ThreadingMixIn, BaseHTTPServer.HTTPServer):
+class ThreadingHttpServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
     """
     Threading HTTP Server
     """
     pass
 
 
-class HttpRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler, rpclib.JsonRpc):
+class HttpRequestHandler(http.server.BaseHTTPRequestHandler, rpclib.JsonRpc):
     """
     HttpRequestHandler for JSON-RPC-Requests
 
@@ -390,13 +392,14 @@ class HttpRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler, rpclib.JsonRpc):
         """
 
         # Parse URL query
-        path, query_str = urllib.splitquery(self.path)
+
+        scheme, netloc, path, params, query_str, fragment = urlparse(self.path)
         if not query_str:
             # Bad Request
-            return self.send_error(httplib.BAD_REQUEST)
+            return self.send_error(http.client.BAD_REQUEST)
 
         # Parse querystring
-        query = urlparse.parse_qs(query_str)
+        query = parse_qs(query_str)
 
         # jsonrpc
         jsonrpc = query.get("jsonrpc")
@@ -414,7 +417,7 @@ class HttpRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler, rpclib.JsonRpc):
             method = method[0]
         else:
             # Bad Request
-            return self.send_error(httplib.BAD_REQUEST)
+            return self.send_error(http.client.BAD_REQUEST)
 
         # params
         args = []
@@ -439,7 +442,7 @@ class HttpRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler, rpclib.JsonRpc):
         response_json = self.call(request_json) or ""
 
         # Return result
-        self.send_response(code = httplib.OK)
+        self.send_response(code = http.client.OK)
         self.set_content_type(self.content_type)
         self.set_no_cache()
         self.set_content_length(len(response_json))
@@ -479,7 +482,7 @@ class HttpRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler, rpclib.JsonRpc):
         response_json = self.call(request_json) or ""
 
         # Return result
-        self.send_response(code = httplib.OK)
+        self.send_response(code = http.client.OK)
         self.set_content_type(self.content_type)
         self.set_no_cache()
 
@@ -547,13 +550,13 @@ def handle_cgi_request(methods = None):
     response_json = rpclib.JsonRpc(methods = methods).call(request_json)
 
     # Return headers
-    print "Content-Type: application/json"
-    print "Cache-Control: no-cache"
-    print "Pragma: no-cache"
-    print
+    print("Content-Type: application/json")
+    print("Cache-Control: no-cache")
+    print("Pragma: no-cache")
+    print()
 
     # Return result
-    print response_json
+    print(response_json)
 
 
 

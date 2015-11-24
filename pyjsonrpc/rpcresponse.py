@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import rpcjson
-from bunch import Bunch
-from rpcerror import InternalError
+
+from __future__ import unicode_literals
+from neobunch import NeoBunch
+from . import rpcjson
+from . rpcerror import InternalError
 
 
-class Response(Bunch):
+class Response(NeoBunch):
     """
     Represents a JSON-RPC-response.
     """
 
-    class Error(Bunch):
+    class Error(NeoBunch):
 
         def __init__(self, code, message, data):
             """
@@ -20,7 +22,7 @@ class Response(Bunch):
             :param data: Additional error informations
             """
 
-            Bunch.__init__(self)
+            NeoBunch.__init__(self)  # FIXME use super
             self.code = code
             self.message = message
             self.data = data
@@ -42,7 +44,7 @@ class Response(Bunch):
         :param result: Result data
         """
 
-        Bunch.__init__(self)
+        NeoBunch.__init__(self)  # FIXME use super
         self.jsonrpc = jsonrpc
         self.id = id
         self.result = result if not error else None

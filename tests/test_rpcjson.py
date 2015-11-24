@@ -4,28 +4,27 @@
 Nosetests for *rpcjson.py*.
 """
 
+
+from __future__ import unicode_literals
 import pyjsonrpc.rpcjson
+import json
 
 
-EXAMPLE_LIST = [1, u"a", u"Ä"]
-EXAMPLE_LIST_JSON = '[1, "a", "\u00c4"]'
-
-EXAMPLE_DICT = {"a": u"Ä"}
-EXAMPLE_DICT_JSON = '{"a": "\u00c4"}'
-
-
-def test_dumps_list():
-    assert pyjsonrpc.rpcjson.dumps(EXAMPLE_LIST) == EXAMPLE_LIST_JSON
+DATA = {
+    "nested_dict": {"key": "value"},
+    "nested_list": [1, 2, 3, 4],
+    "int": 1,
+    "float": 1.1,
+    "unicode": "Ünicöde",
+}
 
 
-def test_dumps_dict():
-    assert pyjsonrpc.rpcjson.dumps(EXAMPLE_DICT) == EXAMPLE_DICT_JSON
+def test_roundtrip():
+    assert(pyjsonrpc.rpcjson.loads(pyjsonrpc.rpcjson.dumps(DATA)) == DATA)
 
 
-def test_loads_list():
-    assert pyjsonrpc.rpcjson.loads(EXAMPLE_LIST_JSON) == EXAMPLE_LIST
-
-
-def test_loads_dict():
-    assert pyjsonrpc.rpcjson.loads(EXAMPLE_DICT_JSON) == EXAMPLE_DICT
-
+def test_compatibility():
+    encoded = pyjsonrpc.rpcjson.dumps(DATA)
+    assert(encoded == json.dumps(DATA))
+    decoded = pyjsonrpc.rpcjson.loads(encoded)
+    assert(decoded == json.loads(encoded))

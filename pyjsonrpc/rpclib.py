@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+
+from __future__ import unicode_literals
 import logging
-import rpcrequest
-import rpcresponse
-import rpcerror
-import rpcjson
-from tools import safe_unicode
+from . import rpcrequest
+from . import rpcresponse
+from . import rpcerror
+from . import rpcjson
+from . tools import safe_unicode
 
 
 def rpcmethod(func):
@@ -115,7 +117,7 @@ class JsonRpc(object):
                 responses.append(
                     rpcresponse.Response(jsonrpc = jsonrpc, id = id, result = result)
                 )
-            except TypeError, err:
+            except TypeError as err:
                 traceback_info = rpcerror.get_traceback_string()
                 if "takes exactly" in safe_unicode(err) and "arguments" in safe_unicode(err):
                     error = rpcerror.InvalidParams(data = traceback_info)
@@ -149,7 +151,7 @@ class JsonRpc(object):
                             data = safe_unicode(error.data)
                         )
                     )
-            except rpcerror.JsonRpcError, err:
+            except rpcerror.JsonRpcError as err:
                 responses.append(
                     rpcresponse.Response(
                         jsonrpc = jsonrpc,
@@ -164,7 +166,7 @@ class JsonRpc(object):
                         data = safe_unicode(err.data)
                     )
                 )
-            except StandardError, err:
+            except StandardError as err:
                 traceback_info = rpcerror.get_traceback_string()
                 if hasattr(err, "data"):
                     error_data = err.data

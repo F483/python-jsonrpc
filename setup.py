@@ -2,7 +2,7 @@
 # coding: utf-8
 """
 Python JSON-RPC Library Client Server - Setup
- 
+
 Created
     2013-06-23 by Gerold - http://halvar.at/
 """
@@ -54,6 +54,6 @@ setup(
         "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
     ],
-    install_requires = ["bunch"],
+    install_requires=open("requirements.txt").readlines(),
+    tests_require=open("test_requirements.txt").readlines(),
 )
-

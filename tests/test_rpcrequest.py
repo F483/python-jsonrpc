@@ -4,8 +4,12 @@
 Nosetests for *rpcrequest.py*.
 """
 
+
+from __future__ import unicode_literals
+from __future__ import print_function
 import json
 import pyjsonrpc.rpcrequest
+
 
 TESTMETHOD = u"TESTMETHOD"
 TESTID = u"TESTID"

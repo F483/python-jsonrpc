@@ -4,6 +4,7 @@
 Nosetests for *rpcerror.py*.
 """
 
+
 import pyjsonrpc.rpcerror
 from nose.tools import raises
 

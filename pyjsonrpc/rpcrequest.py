@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+
+from __future__ import unicode_literals
 import sys
 import traceback
 import uuid
-import rpcerror
-import rpcjson
-from bunch import Bunch
+from neobunch import NeoBunch
+from . import rpcjson
+from . import rpcerror
 
 
-class Request(Bunch):
+class Request(NeoBunch):
     """
     JSON-RPC-Request
     """
@@ -21,7 +23,7 @@ class Request(Bunch):
         id = None,
         params = None
     ):
-        Bunch.__init__(self)
+        NeoBunch.__init__(self)  # FIXME use super
 
         self.jsonrpc = jsonrpc or "2.0"
         self.method = method
@@ -169,8 +171,8 @@ def create_request_dict(method, *args, **kwargs):
     else:
         params = args
     data = {
-        "method": unicode(method),
-        "id": unicode(uuid.uuid4()),
+        "method": str(method),
+        "id": str(uuid.uuid4()),
         "jsonrpc": "2.0",
         "params": params
     }
