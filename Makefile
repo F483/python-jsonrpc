@@ -30,7 +30,7 @@ help:
 clean:
 	rm -rf env
 	rm -rf build
-	rm -rf dist
+	#rm -rf dist
 	rm -rf *.egg
 	rm -rf *.egg-info
 	find | grep -i ".*\.pyc$$" | xargs -r -L1 rm
@@ -66,7 +66,7 @@ shell: install
 	env/bin/ipython
 
 
-test:
+test: setup
 	env/bin/nosetests -v
 
 

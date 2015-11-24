@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-
 from __future__ import unicode_literals
 from __future__ import print_function
+
+# FIXME name confilics with backported standard http module in python 2
+from future.backports.http import server
+from future.backports.http import client
+from future.backports.http import cookies as http_cookies
+
 import os
 import sys
 from io import StringIO
 import base64
-import http.server
-import http.client
-import http.cookies
 import socketserver
 import gzip
 import tempfile
@@ -110,7 +112,7 @@ def http_request(
 
     # Cookies
     if cookies:
-        cookie = http.cookies.SimpleCookie(cookies)
+        cookie = http_cookies.SimpleCookie(cookies)
         request.add_header("Cookie", cookie.output(header = "", sep = ";"))
 
     # Additional headers (overrides other headers)
@@ -327,14 +329,14 @@ class HttpClient(object):
         return self._Method(http_client_instance = self, method = method)
 
 
-class ThreadingHttpServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
+class ThreadingHttpServer(socketserver.ThreadingMixIn, server.HTTPServer):
     """
     Threading HTTP Server
     """
     pass
 
 
-class HttpRequestHandler(http.server.BaseHTTPRequestHandler, rpclib.JsonRpc):
+class HttpRequestHandler(server.BaseHTTPRequestHandler, rpclib.JsonRpc):
     """
     HttpRequestHandler for JSON-RPC-Requests
 
@@ -396,7 +398,7 @@ class HttpRequestHandler(http.server.BaseHTTPRequestHandler, rpclib.JsonRpc):
         scheme, netloc, path, params, query_str, fragment = urlparse(self.path)
         if not query_str:
             # Bad Request
-            return self.send_error(http.client.BAD_REQUEST)
+            return self.send_error(client.BAD_REQUEST)
 
         # Parse querystring
         query = parse_qs(query_str)
@@ -417,7 +419,7 @@ class HttpRequestHandler(http.server.BaseHTTPRequestHandler, rpclib.JsonRpc):
             method = method[0]
         else:
             # Bad Request
-            return self.send_error(http.client.BAD_REQUEST)
+            return self.send_error(client.BAD_REQUEST)
 
         # params
         args = []
@@ -442,7 +444,7 @@ class HttpRequestHandler(http.server.BaseHTTPRequestHandler, rpclib.JsonRpc):
         response_json = self.call(request_json) or ""
 
         # Return result
-        self.send_response(code = http.client.OK)
+        self.send_response(code = client.OK)
         self.set_content_type(self.content_type)
         self.set_no_cache()
         self.set_content_length(len(response_json))
@@ -482,7 +484,7 @@ class HttpRequestHandler(http.server.BaseHTTPRequestHandler, rpclib.JsonRpc):
         response_json = self.call(request_json) or ""
 
         # Return result
-        self.send_response(code = http.client.OK)
+        self.send_response(code = client.OK)
         self.set_content_type(self.content_type)
         self.set_no_cache()
 
