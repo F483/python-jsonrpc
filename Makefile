@@ -67,7 +67,7 @@ shell: install
 
 
 test: setup
-	env/bin/coverage run --source="pyjsonrpc" -m nose -v
+	env/bin/nosetests --with-coverage --cover-package=pyjsonrpc
 
 
 view_readme: setup
