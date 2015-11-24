@@ -29,18 +29,20 @@ HTTP Client Example
     #!/usr/bin/env python
     # coding: utf-8
 
+    from __future__ import unicode_literals
+    from __future__ import print_function
     import pyjsonrpc
 
     http_client = pyjsonrpc.HttpClient(
-        url = "http://example.com/jsonrpc",
-        username = "Username",
-        password = "Password"
+        url="http://example.com/jsonrpc",
+        username="Username",
+        password="Password"
     )
-    print http_client.call("add", 1, 2)
+    print(http_client.call("add", 1, 2))
     # Result: 3
 
     # It is also possible to use the *method* name as *attribute* name.
-    print http_client.add(1, 2)
+    print(http_client.add(1, 2))
     # Result: 3
 
     # Notifications send messages to the server, without response.
@@ -56,6 +58,8 @@ HTTP Server Example
     #!/usr/bin/env python
     # coding: utf-8
 
+    from __future__ import unicode_literals
+    from __future__ import print_function
     import pyjsonrpc
 
 
@@ -72,8 +76,8 @@ HTTP Server Example
         server_address = ('localhost', 8080),
         RequestHandlerClass = RequestHandler
     )
-    print "Starting HTTP server ..."
-    print "URL: http://localhost:8080"
+    print("Starting HTTP server ...")
+    print("URL: http://localhost:8080")
     http_server.serve_forever()
 
 
@@ -86,6 +90,8 @@ CGI Example
     #!/usr/bin/env python
     # coding: utf-8
 
+    from __future__ import unicode_literals
+    from __future__ import print_function
     import pyjsonrpc
 
     def add(a, b):
@@ -105,6 +111,8 @@ Library Usage Example
     #!/usr/bin/env python
     # coding: utf-8
 
+    from __future__ import unicode_literals
+    from __future__ import print_function
     import pyjsonrpc
 
 
@@ -132,9 +140,9 @@ Library Usage Example
 
     # 5. Print result or error
     if response.error:
-        print "Error:", response.error.code, response.error.message
+        print("Error:", response.error.code, response.error.message)
     else:
-        print "Result:", response.result
+        print("Result:", response.result)
 
 
 ================
@@ -146,6 +154,8 @@ CherryPy Example
     #!/usr/bin/env python
     # coding: utf-8
 
+    from __future__ import unicode_literals
+    from __future__ import print_function
     import cherrypy
     from pyjsonrpc.cp import CherryPyJsonRpc, rpcmethod
 
@@ -160,8 +170,8 @@ CherryPy Example
         index = CherryPyJsonRpc.request_handler
 
 
-    print "Starting HTTP server ..."
-    print "URL: http://localhost:8080"
+    print("Starting HTTP server ...")
+    print("URL: http://localhost:8080")
     cherrypy.quickstart(Root())
 
 
