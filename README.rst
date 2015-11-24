@@ -2,6 +2,14 @@
 Python JSON-RPC Client Server Library With Additional Support for BaseHTTPServer, CherryPy And CGI
 ##################################################################################################
 
+|BuildLink|_ |CoverageLink|_ 
+
+.. |BuildLink| image:: https://img.shields.io/travis/F483/python-jsonrpc/master.svg?label=Build-Master
+.. _BuildLink: https://travis-ci.org/F483/python-jsonrpc
+
+.. |CoverageLink| image:: https://img.shields.io/coveralls/F483/python-jsonrpc/master.svg?label=Coverage-Master
+.. _CoverageLink: https://coveralls.io/r/F483/python-jsonrpc
+
 
 ============
 Installation
